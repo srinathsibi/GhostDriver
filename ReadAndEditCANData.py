@@ -4,26 +4,25 @@
 
 
 ## imports for CSV file reading and interacting on the command line
-import csv,argparse,sys
+import csv,argparse,sys,os
 
-## Here is the input for the text file that needs to read
-## Enter the name of the file that needs to be opened
-## Next Step is to input on the command console
+###########################################################################################################
+############### Reading the CAN file ######################################################################
 try:
-	f = open('20180726-1_can.txt')
+	os.chdir("../GDData/CAN")	#Path for CAN data
+	f = open('20180726-1_can.txt')	#Name of CAN data file
 	csv_f = csv.reader(f)
 except NameError:
 	print "No such file exists!!!!"
 
 ## Opening a new file to write data that is being read from the main CAN file
-filename =  raw_input(' Please Enter the file name for the clipped file ')
+filename =  raw_input(' Please Enter the file name for the clipped CAN file ')
 time_start = raw_input(' Please enter the start time for clipping ')
 time_stop = raw_input(' Please enter the stop time for clipping ')
 # Outputting the parameters to confirm the input
 print " Start time:",type(time_start)," ",time_start,"\n", "Stop Time: ",type(time_stop)," ",time_stop,"\n",	\
 	" File Name: " , type(filename)," ",filename
 out_file = open(filename, 'w')
-## Printing content here to make sure the stuff is working
 with out_file:
 	for row in csv_f:
 		#print(row) # row is a list item. Including this line prints all the lines in the 
@@ -37,3 +36,19 @@ with out_file:
 ## Closing files after reading and writing
 f.close()
 out_file.close()
+
+
+############################################################################################################
+################# Reading the IMU file #####################################################################
+try:
+	os.chdir("../GDData/IMU")	#Path for CAN data
+	f = open('imuLog_1532641633.csv')	#Name of CAN data file
+	csv_f = csv.reader(f)
+except NameError:
+	print "No such file exists!!!!"
+## Opening a new file to write data that is being read from the main CAN file
+filename =  raw_input(' Please Enter the file name for the clipped IMU file ')
+
+out_file = open(filename, 'w')
+
+

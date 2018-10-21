@@ -5,7 +5,36 @@
 
 ## imports for CSV file reading and interacting on the command line
 import csv,argparse,sys,os
+import subprocess, re
+from decimal import Decimal
 
+
+#
+def get_video_length(path):
+	process = subprocess.Popen(['/usr/bin/ffmpeg', '-i', path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	stdout, stderr = process.communicate()
+	#print stdout
+	for line in stdout.split(os.linesep):
+		#print line , "\n", type(line), "\n"
+		#print line.split(":")[0],"\n" , type(line.split(":")[0])
+		output_label = line.split(":")[0]
+		#print output_label
+		if output_label.find('Duration')>=0: #trying to find the output string that has the
+			duration = str(line.split(" ")[3])
+			print duration# Different split than above to get to the duration varibales
+			time_values = duration.split(':')
+			print (float(time_values[0])*3600 + float(time_values[1])*60 )
+ 	"""matches = re.search(r"Duration:\s{1}(?P\d+?):(?P\d+?):(?P\d+\.\d+?),", stdout, re.DOTALL).groupdict()
+
+	hours = Decimal(matches['hours'])
+	minutes = Decimal(matches['minutes'])
+	seconds = Decimal(matches['seconds'])
+
+	total = 0
+	total += 60 * 60 * hours
+	total += 60 * minutes
+	total += seconds
+	return total"""
 ###########################################################################################################
 ############### Reading the CAN file ######################################################################
 try:
@@ -25,15 +54,22 @@ except NameError:
         print "No such file exists!!!!"
 
 #############################################################################################################
-################ Reading start time from the video start file###############################################
+################ Reading start time and end time from the video start file###################################
 for row in csv_g:
     array = [i.split(' ',4)[3] for i in row]
     print type(float(array[0]))," : ",float(array[0])
 time_start = float(array[0])
-print "Time Start : ", time_start
+print "Time Start : ", time_start # Time at the CAN files need to be clipped.
+video_length = get_video_length('20180816quad.mov')
+print " Video length : ", video_length, "\n"
 
 
 
+#############################################################################################################
+################ Reading start time from the video start file################################################
+for row in csv_f:
+	#print "Timestamp: ", row[0].strip().split(" ")[1], "length: ", len(row[0].strip().split(" ")[1]);
+	timestamp = row[0].strip().split(" ")[1]; # TimeStamp for each writerows
 
 """
 ############################################################################################################

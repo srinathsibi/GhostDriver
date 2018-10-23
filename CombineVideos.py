@@ -5,10 +5,11 @@
 # file creation. For example for files ['GP019354.MP4', 'GOPR9354.MP4', 'GP029354.MP4']...
 # The first file ends with numbers 9354, then 019354 and 029354 and so on. So we combine the files starting with lowest..
 # number in filename and then move to the maximum number in the filenames. For now , a simple sort() functio
-import csv,argparse,sys,os,ffmpeg
+import csv,argparse,sys,os
 import subprocess, re
 from decimal import Decimal
 import glob
+from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 os.chdir("L_Corner") # Remove this statemnt, since the files will be pasted in each folder.
 try:
@@ -25,3 +26,8 @@ else:
     print "Insufficent number of files in folder"
 #ffmpeg -i "concat:GOPR9354.MP4|GP019354.MP4|GP029354.MP4" -c:a copy -c:v copy output.mp4
 #ffmpeg is cauding weird errors. Output file is smaller than it should be and the above command needs to be run from bash => Not optimal
+clip1 = VideoFileClip(filelist[0])
+clip2 = VideoFileClip(filelist[1]).subclip(50,60)
+clip3 = VideoFileClip(filelist[2])
+final_clip = concatenate_videoclips([clip1,clip2,clip3])
+final_clip.write_videofile("my_concatenation.mp4")

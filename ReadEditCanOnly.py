@@ -8,7 +8,6 @@ import csv,argparse,sys,os
 import subprocess, re
 from decimal import Decimal
 
-
 #
 def get_video_length(path):
 	process = subprocess.Popen(['/usr/bin/ffmpeg', '-i', path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -23,18 +22,10 @@ def get_video_length(path):
 			duration = str(line.split(" ")[3])
 			print duration# Different split than above to get to the duration varibales
 			time_values = duration.split(':')
-			print (float(time_values[0])*3600 + float(time_values[1])*60 )
- 	"""matches = re.search(r"Duration:\s{1}(?P\d+?):(?P\d+?):(?P\d+\.\d+?),", stdout, re.DOTALL).groupdict()
-
-	hours = Decimal(matches['hours'])
-	minutes = Decimal(matches['minutes'])
-	seconds = Decimal(matches['seconds'])
-
-	total = 0
-	total += 60 * 60 * hours
-	total += 60 * minutes
-	total += seconds
-	return total"""
+			print "Length of video is : ", (float(time_values[0])*3600 + float(time_values[1])*60 )
+			quad_video_length = (float(time_values[0])*3600 + float(time_values[1])*60 )
+	process.wait()
+	return quad_video_length
 ###########################################################################################################
 ############### Reading the CAN file ######################################################################
 try:
@@ -60,11 +51,7 @@ for row in csv_g:
     print type(float(array[0]))," : ",float(array[0])
 time_start = float(array[0])
 print "Time Start : ", time_start # Time at the CAN files need to be clipped.
-video_length = get_video_length('20180816quad.mov')
-print " Video length : ", video_length, "\n"
-
-
-
+get_video_length('20180816quad.mov')
 #############################################################################################################
 ################ Reading start time from the video start file################################################
 for row in csv_f:

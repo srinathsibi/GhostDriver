@@ -20,43 +20,43 @@ def get_video_length(path):
 		#print output_label
 		if output_label.find('Duration')>=0: #trying to find the output string that has the
 			duration = str(line.split(" ")[3])
-			print duration# Different split than above to get to the duration varibales
+			#print duration# Different split than above to get to the duration varibales
 			time_values = duration.split(':')
 			print "Length of video is : ", (float(time_values[0])*3600 + float(time_values[1])*60 )
 			quad_video_length = (float(time_values[0])*3600 + float(time_values[1])*60 )
 	process.wait()
 	return quad_video_length
-###########################################################################################################
-############### Reading the CAN file ######################################################################
-try:
-	os.chdir("../GDData/20180816-1/CAN")	#Path for CAN data
-	f = open('20180816-1_can.txt')	#Name of CAN data file
-	csv_f = csv.reader(f)
-except NameError:
-	print "No such file exists!!!!"
 
-try:
-    os.chdir("../VIDEO/QUAD") # Navigate to the video folder for start time of clipped
-    g = open("20180816-1_videoStart.txt") # Name of the start time file changed from the actual name to this format
-    #Note that here it is assumed that the video file was started the last, hence its start time
-    # and end time are the actual clip points for all data.
-    csv_g = csv.reader(g)
-except NameError:
-        print "No such file exists!!!!"
+if __name__ == '__main__':
+	### Accessing the files in requisite folders
+	try:
+		os.chdir("../GDData/20180816-1/CAN")	#Path for CAN data
+		f = open('20180816-1_can.txt')	#Name of CAN data file
+		csv_f = csv.reader(f)
+	except NameError:
+		print "No such file exists!!!!"
+	try:
+		os.chdir("../VIDEO/QUAD") # Navigate to the video folder for start time of clipped
+		g = open("20180816-1_videoStart.txt") # Name of the start time file changed from the actual name to this format
+    	#Note that here it is assumed that the video file was started the last, hence its start time
+    	# and end time are the actual clip points for all data.
+		csv_g = csv.reader(g)
+	except NameError:
+		print "No such file exists!!!!"
 
-#############################################################################################################
-################ Reading start time and end time from the video start file###################################
-for row in csv_g:
-    array = [i.split(' ',4)[3] for i in row]
-    print type(float(array[0]))," : ",float(array[0])
-time_start = float(array[0])
-print "Time Start : ", time_start # Time at the CAN files need to be clipped.
-get_video_length('20180816quad.mov')
-#############################################################################################################
-################ Reading start time from the video start file################################################
-for row in csv_f:
-	#print "Timestamp: ", row[0].strip().split(" ")[1], "length: ", len(row[0].strip().split(" ")[1]);
-	timestamp = row[0].strip().split(" ")[1]; # TimeStamp for each writerows
+		#############################################################################################################
+		################ Reading start time and end time from the video start file###################################
+	for row in csv_g:
+		array = [i.split(' ',4)[3] for i in row]
+    	print type(float(array[0]))," : ",float(array[0])
+	time_start = float(array[0])
+	print "Time Start : ", time_start # Time at the CAN files need to be clipped.
+	get_video_length('20180816quad.mov')
+	#############################################################################################################
+	################ Reading start time from the video start file################################################
+	for row in csv_f:
+		#print "Timestamp: ", row[0].strip().split(" ")[1], "length: ", len(row[0].strip().split(" ")[1]);
+		timestamp = row[0].strip().split(" ")[1]; # TimeStamp for each writerows
 
 """
 ############################################################################################################

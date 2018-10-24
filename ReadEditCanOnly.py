@@ -55,6 +55,7 @@ if __name__ == '__main__':
 	print "Time Start : ", TIME_START # Time at the CAN files need to be clipped.
 	VIDEO_LENGTH = get_video_length('20180816quad.mov')
 	print "Video Length : ", VIDEO_LENGTH , "\n"
+	TIME_STOP = TIME_START + VIDEO_LENGTH
 	#############################################################################################################
 	################ Writing the output file for clipped CAN ####################################################
 	os.chdir("../../")#Creating a new folder for the Clipped CAN and IMU dat
@@ -62,12 +63,21 @@ if __name__ == '__main__':
 	if not os.path.exists(CLIPPEDFOLDERPATH):
 		os.makedirs(CLIPPEDFOLDERPATH)
 	OUTPUTFILENAME = 'clipped_can.txt'
+	os.chdir("ClippedData")
+	outfile = open(OUTPUTFILENAME,'w')
+	#Begin Writing here
+	with outfile:
+		outputwriter = csv.writer(outfile)
+		outputwriter.writerows([row] for row in csv_f if ((float((row[0].strip().split(" ")[1]).split(':')[0]) > TIME_START) and (float((row[0].strip().split(" ")[1]).split(':')[0]) < TIME_STOP)))
+		#the humongous line above iteratively clips the data as between start and end points.
+	outfile.close()
+	print "Success!!! CAN file clipped and written in the ClippedData folder!!! \n"
 	#############################################################################################################
 	################ Reading from the CAN file and wriing into a clipped file####################################
 #	for row in csv_f:
 #		#print "Timestamp: ", row[0].strip().split(" ")[1], "length: ", len(row[0].strip().split(" ")[1]);
-#		timestamp = row[0].strip().split(" ")[1]; # TimeStamp for each writerows
-
+#		timestamp = float((row[0].strip().split(" ")[1]).split(':')[0]); # TimeStamp for each writerows
+#		print timestamp
 """
 ############################################################################################################
 ############### Writing the time clipped files simultaneously###############################################

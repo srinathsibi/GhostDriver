@@ -1,4 +1,4 @@
-#Srinath Sibi for Ghost GhostDriver
+#Srinath Sibi for Ghost GhostDriver ssibi@stanford.edu
 #Combine Video Files in folder
 # More than one file to combine
 # GoPro files are broken down into  4 GB files as we keep recording. The numbers in a GOPRO file name indicate the order of...
@@ -14,12 +14,14 @@ from decimal import Decimal
 import glob
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 
-os.chdir("L_Corner") # Remove this statemnt, since the files will be pasted in each folder.
+# The line below is a way to change directory into a subfolder if needed.
+#os.chdir("L_Corner") # Remove this statemnt, since the files will be pasted in each folder.
+
 try:
     filelist = glob.glob('*.MP4') # Searching for all files with MP4 extension
     print "List of MP4 files in the folder right now" , filelist, "  ", type(filelist[1])
-except NameError:
-    print "Error Encountered" # Make sure you are in the right folder if this error messsage pops up.
+except IndexError:
+    print "Error Encountered. There are either no MP4 files here or you are using this script in the wrong folder!" # Make sure you are in the right folder if this error messsage pops up.
     # It could also be lack of any MP4 files in the folder
 if len(filelist) > 1:
     print "here we go!"

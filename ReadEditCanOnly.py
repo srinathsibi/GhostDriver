@@ -36,8 +36,9 @@ if __name__ == '__main__':
 		os.chdir("../GDData/20180816-1/CAN")#Path for CAN folder
 		canfile = glob.glob('*can.txt')#Searching for the CAN file in the folder with '*can.txt' in name
 		f = open(canfile[0])	#Name of CAN data file
+		print "CAN file found :", canfile, "\n\n"
 		csv_f = csv.reader(f)
-	except NameError:
+	except IndexError:
 		print "No such file exists!!!!"
 	#searching and opening the quad video to determine start and end times
 	try:
@@ -46,15 +47,15 @@ if __name__ == '__main__':
 		g = open(startfilename[0]) # Name of the start time file changed from the actual name to this format
     	#Note that here it is assumed that the video file was started the last, hence its start time
     	# and end time are the actual clip points for all data.
+		print "Video Start file found :", startfilename, "\n\n"
 		csv_g = csv.reader(g)
-	except NameError:
+	except IndexError:
 		print "No such file exists!!!!"
-
 	#############################################################################################################
 	################ Reading start time and end time from the video start file###################################
 	for row in csv_g:
 		array = [i.split(' ',4)[3] for i in row]
-    	print type(float(array[0]))," : ",float(array[0])
+    	#print type(float(array[0]))," : ",float(array[0])
 	TIME_START = float(array[0])
 	print "Time Start : ", TIME_START # Time at the CAN files need to be clipped.
 	VIDEO_LENGTH = get_video_length('20180816quad.mov')
@@ -77,13 +78,13 @@ if __name__ == '__main__':
 		#the humongous line above iteratively clips the data as between start and end points.
 	outfile.close()
 	print "Success!!! CAN file clipped and written in the ClippedData folder!!! \n"
-
-	# Searching and opening IMU file
+	###############################################################################################################
+	# Searching and opening IMU file ######## Doing this here to avoid problems in Path resolution for os.chdir####
 	try:
-		os.chdir("../../IMU/") #Path for IMU folders
+		os.chdir("../IMU/") #Path for IMU folders
 		imufile = glob.glob('*imu.csv')# Search for IMU data with ending 'imu.csv' in name
-		print "IMU file located ", imufile
 		h = open(imufile[0])
+		print "IMU file located ", imufile , "\n\n"
 		csv_h = csv.reader(h)
 	except IndexError:
 		print "No IMU file here"

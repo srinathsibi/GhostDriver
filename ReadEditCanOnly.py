@@ -31,21 +31,23 @@ if __name__ == '__main__':
 	### Accessing the files in requisite folders
 	try:
 		os.chdir("../GDData/20180816-1/CAN")#Path for CAN folder
-		canfile = glob.glob('*can.txt')#Searching for the CAN file in the folder
+		canfile = glob.glob('*can.txt')#Searching for the CAN file in the folder with '*can.txt' in name
 		f = open(canfile[0])	#Name of CAN data file
 		csv_f = csv.reader(f)
 	except NameError:
 		print "No such file exists!!!!"
 	try:
 		os.chdir("../VIDEO/QUAD") # Path for QUAD folder
-		startfilename=glob.glob('*videoStart.txt') #Search for video start file
+		startfilename=glob.glob('*videoStart.txt') #Search for video start file with 'videoStart.txt' in name
 		g = open(startfilename[0]) # Name of the start time file changed from the actual name to this format
     	#Note that here it is assumed that the video file was started the last, hence its start time
     	# and end time are the actual clip points for all data.
 		csv_g = csv.reader(g)
 	except NameError:
 		print "No such file exists!!!!"
-
+	try:
+		os.chdir("../../IMU/") #Path for IMU folders
+		imufile = glob.glob('*imu.csv')# Search for IMU data with ending 'imu.csv' in name
 	#############################################################################################################
 	################ Reading start time and end time from the video start file###################################
 	for row in csv_g:

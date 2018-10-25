@@ -29,8 +29,14 @@ def get_video_length(path):
 	return quad_video_length
 #Function to parse the IMU data
 def imuparser(imufilereader):
-	#print "File reader received" , imufilereader, type(imufilereader)
-	print [(row) for row in imufilereader]
+
+	print "File reader received" , imufilereader
+	for row in imufilereader:
+		print row , "\n\n", type(row), "\n\n"
+		if len(row)>1:
+		 	if row[1] == 'IMU calibration complete! Ready for use.':
+				print "Start point of IMU recording located"
+				break
 if __name__ == '__main__':
 	global quad_video_length
 	###In main function

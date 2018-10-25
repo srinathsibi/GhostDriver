@@ -23,12 +23,15 @@ def get_video_length(path):
 			#print duration# Different split than above to get to the duration varibales
 			time_values = duration.split(':')
 			#print "Length of video is : ", (float(time_values[0])*3600 + float(time_values[1])*60 )
-			quad_video_length = (float(time_values[0])*3600 + float(time_values[1])*60 )
+			video_length = (float(time_values[0])*3600 + float(time_values[1])*60)
+			quad_video_length = video_length
 	process.wait()
 	return quad_video_length
-
 if __name__ == '__main__':
+	global quad_video_length
+	###In main function
 	### Accessing the files in requisite folders
+	#Opening the CAN file here
 	try:
 		os.chdir("../GDData/20180816-1/CAN")#Path for CAN folder
 		canfile = glob.glob('*can.txt')#Searching for the CAN file in the folder with '*can.txt' in name
@@ -36,6 +39,7 @@ if __name__ == '__main__':
 		csv_f = csv.reader(f)
 	except NameError:
 		print "No such file exists!!!!"
+	#searching and opening the quad video to determine start and end times
 	try:
 		os.chdir("../VIDEO/QUAD") # Path for QUAD folder
 		startfilename=glob.glob('*videoStart.txt') #Search for video start file with 'videoStart.txt' in name
@@ -45,9 +49,7 @@ if __name__ == '__main__':
 		csv_g = csv.reader(g)
 	except NameError:
 		print "No such file exists!!!!"
-	try:
-		os.chdir("../../IMU/") #Path for IMU folders
-		imufile = glob.glob('*imu.csv')# Search for IMU data with ending 'imu.csv' in name
+
 	#############################################################################################################
 	################ Reading start time and end time from the video start file###################################
 	for row in csv_g:
@@ -58,6 +60,7 @@ if __name__ == '__main__':
 	VIDEO_LENGTH = get_video_length('20180816quad.mov')
 	print "Video Length : ", VIDEO_LENGTH , "\n"
 	TIME_STOP = TIME_START + VIDEO_LENGTH
+	g.close()#Closing the reader for video start file
 	#############################################################################################################
 	################ Writing the output file for clipped CAN ####################################################
 	os.chdir("../../")#Creating a new folder for the Clipped CAN and IMU dat
@@ -74,6 +77,16 @@ if __name__ == '__main__':
 		#the humongous line above iteratively clips the data as between start and end points.
 	outfile.close()
 	print "Success!!! CAN file clipped and written in the ClippedData folder!!! \n"
+
+	# Searching and opening IMU file
+	try:
+		os.chdir("../../IMU/") #Path for IMU folders
+		imufile = glob.glob('*imu.csv')# Search for IMU data with ending 'imu.csv' in name
+		print "IMU file located ", imufile
+		h = open(imufile[0])
+		csv_h = csv.reader(h)
+	except IndexError:
+		print "No IMU file here"
 	#############################################################################################################
 	################ Reading from the CAN file and wriing into a clipped file####################################
 #	for row in csv_f:

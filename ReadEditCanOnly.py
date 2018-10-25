@@ -27,6 +27,10 @@ def get_video_length(path):
 			quad_video_length = video_length
 	process.wait()
 	return quad_video_length
+#Function to parse the IMU data
+def imuparser(imufilereader):
+	#print "File reader received" , imufilereader, type(imufilereader)
+	print [(row) for row in imufilereader]
 if __name__ == '__main__':
 	global quad_video_length
 	###In main function
@@ -36,7 +40,7 @@ if __name__ == '__main__':
 		os.chdir("../GDData/20180816-1/CAN")#Path for CAN folder
 		canfile = glob.glob('*can.txt')#Searching for the CAN file in the folder with '*can.txt' in name
 		f = open(canfile[0])	#Name of CAN data file
-		print "CAN file found :", canfile, "\n\n"
+		print "\n \nCAN file found :", canfile, "\n\n"
 		csv_f = csv.reader(f)
 	except IndexError:
 		print "No such file exists!!!!"
@@ -77,6 +81,7 @@ if __name__ == '__main__':
 		outputwriter.writerows([row] for row in csv_f if ((float((row[0].strip().split(" ")[1]).split(':')[0]) > TIME_START) and (float((row[0].strip().split(" ")[1]).split(':')[0]) < TIME_STOP)))
 		#the humongous line above iteratively clips the data as between start and end points.
 	outfile.close()
+	f.close()
 	print "Success!!! CAN file clipped and written in the ClippedData folder!!! \n"
 	###############################################################################################################
 	# Searching and opening IMU file ######## Doing this here to avoid problems in Path resolution for os.chdir####
@@ -88,6 +93,7 @@ if __name__ == '__main__':
 		csv_h = csv.reader(h)
 	except IndexError:
 		print "No IMU file here"
+	imuparser(csv_h)
 	#############################################################################################################
 	################ Reading from the CAN file and wriing into a clipped file####################################
 #	for row in csv_f:

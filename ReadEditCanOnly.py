@@ -27,16 +27,29 @@ def get_video_length(path):
 			quad_video_length = video_length
 	process.wait()
 	return quad_video_length
+
 #Function to parse the IMU data
 def imuparser(imufilereader):
+	global IMU_START_LINE
+	#print "File reader received" , imufilereader
+	for i, line in enumerate(imufilereader):
+		if len(line)>1 and line[1] == 'IMU calibration complete! Ready for use.':
+			IMU_START_LINE = i#In this loop, line number = i + 1
+			break
+	print "IMU start read at : " , IMU_START_LINE
+	os.chdir('../ClippedData/')
+	imuoutfile = open('Clipped_imu.txt','w')
+	with imuoutfile:
+		imuoutputwriter = csv.writer(imuoutfile)#opening file writer
+		for i, line in enumerate(imufilereader):#Parsing the IMU file
+			if i >= IMU_START_LINE:
+				if float(line[0])>TIME_START and float(line[0])<TIME_STOP:
+					imuoutputwriter.writerows([line])
+					#print line , "\n\n"
+	imuoutfile.close()
+	print "\n\nSuccess!!!Clipped IMU file written!!!\n\n"
 
-	print "File reader received" , imufilereader
-	for row in imufilereader:
-		print row , "\n\n", type(row), "\n\n"
-		if len(row)>1:
-		 	if row[1] == 'IMU calibration complete! Ready for use.':
-				print "Start point of IMU recording located"
-				break
+##################################Main Function#####################################
 if __name__ == '__main__':
 	global quad_video_length
 	###In main function
@@ -67,9 +80,9 @@ if __name__ == '__main__':
 		array = [i.split(' ',4)[3] for i in row]
     	#print type(float(array[0]))," : ",float(array[0])
 	TIME_START = float(array[0])
-	print "Time Start : ", TIME_START # Time at the CAN files need to be clipped.
+	print "Time Start : \n\n", TIME_START # Time at the CAN files need to be clipped.
 	VIDEO_LENGTH = get_video_length('20180816quad.mov')
-	print "Video Length : ", VIDEO_LENGTH , "\n"
+	print "Video Length : \n\n", VIDEO_LENGTH , "\n"
 	TIME_STOP = TIME_START + VIDEO_LENGTH
 	g.close()#Closing the reader for video start file
 	#############################################################################################################

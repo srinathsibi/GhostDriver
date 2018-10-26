@@ -115,6 +115,17 @@ if __name__ == '__main__':
 		print "No IMU file here"
 	imuparser(csv_h)#Function to read and write the IMU file
 	h.close()
+	# Printing name of files in the ClippedData Folder to double check
+	print "\n\nFiles in Current Working Directory:", os.listdir(os.curdir)
+	timestampfile = open('TIMESTAMPS.txt','w')
+	with timestampfile:
+		timestampwriter = csv.writer(timestampfile)
+		timestampwriter.writerow(['Start '+ str(TIME_START)])
+		timestampwriter.writerow(['Stop ' + str(TIME_STOP)])
+		timestampwriter.writerow(['Length ' + str(VIDEO_LENGTH)])
+	timestampfile.close()
+	print "\n\nTime stamp file written, Use this file for further analysis if needed\n\n"
+	print "\n\n ############ End of Clipping Process ################## \n\n"
 ### End of the File, Code beneath is retained for reference purposes only
 """
 	#############################################################################################################

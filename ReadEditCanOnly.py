@@ -51,10 +51,10 @@ def imuparser(imufilereader):
 
 ##################################Main Function#####################################
 if __name__ == '__main__':
-	global quad_video_length
 	###In main function
-	### Accessing the files in requisite folders
-	#Opening the CAN file here
+	global quad_video_length
+	#############################################################################################################
+	############# Opening the CAN file ##########################################################################
 	try:
 		os.chdir("../GDData/20180816-1/CAN")#Path for CAN folder
 		canfile = glob.glob('*can.txt')#Searching for the CAN file in the folder with '*can.txt' in name
@@ -63,7 +63,8 @@ if __name__ == '__main__':
 		csv_f = csv.reader(f)
 	except IndexError:
 		print "No such file exists!!!!"
-	#searching and opening the quad video to determine start and end times
+	#############################################################################################################
+	############# Opening the quad video to determine start and end times ####################################
 	try:
 		os.chdir("../VIDEO/QUAD") # Path for QUAD folder
 		startfilename=glob.glob('*videoStart.txt') #Search for video start file with 'videoStart.txt' in name
@@ -112,14 +113,17 @@ if __name__ == '__main__':
 		csv_h = csv.reader(h)
 	except IndexError:
 		print "No IMU file here"
-	imuparser(csv_h)
+	imuparser(csv_h)#Function to read and write the IMU file
+	h.close()
+### End of the File, Code beneath is retained for reference purposes only
+"""
 	#############################################################################################################
 	################ Reading from the CAN file and wriing into a clipped file####################################
 #	for row in csv_f:
 #		#print "Timestamp: ", row[0].strip().split(" ")[1], "length: ", len(row[0].strip().split(" ")[1]);
 #		timestamp = float((row[0].strip().split(" ")[1]).split(':')[0]); # TimeStamp for each writerows
 #		print timestamp
-"""
+
 ############################################################################################################
 ############### Writing the time clipped files simultaneously###############################################
 

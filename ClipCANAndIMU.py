@@ -53,10 +53,13 @@ def imuparser(imufilereader):
 if __name__ == '__main__':
 	###In main function
 	global quad_video_length
+	###Get User Input for Folder Name###
+	foldername = raw_input("\nHey Dylan and Becky! Good job on collecting more study data. Please enter the name of the folder for which we will be analyzing the data\n")
+	print "\nFolder name received : ", foldername, "\n"
 	#############################################################################################################
 	############# Opening the CAN file ##########################################################################
 	try:
-		os.chdir("../GDData/20180816-1/CAN")#Path for CAN folder
+		os.chdir("../" + foldername +"/CAN")#Path for CAN folder
 		canfile = glob.glob('*can.txt')#Searching for the CAN file in the folder with '*can.txt' in name
 		f = open(canfile[0])	#Name of CAN data file
 		print "\n \nCAN file found :", canfile, "\n\n"
@@ -66,7 +69,7 @@ if __name__ == '__main__':
 	#############################################################################################################
 	############# Opening the quad video to determine start and end times ####################################
 	try:
-		os.chdir("../VIDEO/QUAD") # Path for QUAD folder
+		os.chdir("../QUAD") # Path for QUAD folder
 		startfilename=glob.glob('*videoStart.txt') #Search for video start file with 'videoStart.txt' in name
 		g = open(startfilename[0]) # Name of the start time file changed from the actual name to this format
     	#Note that here it is assumed that the video file was started the last, hence its start time

@@ -21,3 +21,7 @@ To install pip : https://www.makeuseof.com/tag/install-pip-for-python/
 To install MoviePy : http://zulko.github.io/moviepy/install.html
 
 If there are other errors due to missing packages, please contact me.
+
+The codes for analyzing the data are dependent on the folder structure since they naviagate between folder to folder to get the data for cliiping. For this reason, the participant 
+
+![FileStructure](/FolderStructureGD.jpg)

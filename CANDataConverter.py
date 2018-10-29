@@ -26,20 +26,21 @@ WHEEL_ID = 0x0025
 WHEEL_ROTATION = 7
 WHEEL_ANGLE = 8
 angleValue = 360/255
-
-os.chdir('../GDData/20180816-1/ClippedData/')# Changing search location to the requisite location of Clipped Data
+foldername = raw_input("\nHey Dylan and Becky! Good job on clipping the data. Now please enter the folder name\n")
+print "\nFolder name received : ", foldername, "\n"
+os.chdir('../' + foldername + '/ClippedData/')# Changing search location to the requisite location of Clipped Data
 #Opening the can file for reading and separation into relevant parts
 try:
     canfile = glob.glob('clipped_can.txt')# filename for CAN data
     f = open(canfile[0] ,'r')#Opening CAN data file
-    print "\n \nCAN file found :", canfile[0], "\n\n"
+    print "\nCAN file found :", canfile[0], "\n"
     csv_f = csv.reader(f)
 except IndexError:
 	print "No such file exists!!!!"
 try:
     timestamps = glob.glob('TIMESTAMPS.txt')# filename for timestamps file written earlier in ClipCanAndIMU.py
     g = open(timestamps[0],'r')#opening timestamps file
-    print "\n \nTimeStamps file found :", timestamps[0], "\n\n"
+    print "\nTimeStamps file found :", timestamps[0], "\n"
     csv_g = csv.reader(g)
 except IndexError:
     print "No such file exists!!!!"

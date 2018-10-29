@@ -7,6 +7,7 @@
 import csv,argparse,sys,os
 import subprocess, re, glob
 from decimal import Decimal
+import CANDataConverter
 
 # This function takes the relative path to the quad video file and then gets the length of the quad video
 def get_video_length(path):
@@ -69,7 +70,7 @@ if __name__ == '__main__':
 	#############################################################################################################
 	############# Opening the quad video to determine start and end times ####################################
 	try:
-		os.chdir("../QUAD") # Path for QUAD folder
+		os.chdir("../QUAD/") # Path for QUAD folder
 		startfilename=glob.glob('*videoStart.txt') #Search for video start file with 'videoStart.txt' in name
 		g = open(startfilename[0]) # Name of the start time file changed from the actual name to this format
     	#Note that here it is assumed that the video file was started the last, hence its start time
@@ -85,13 +86,16 @@ if __name__ == '__main__':
     	#print type(float(array[0]))," : ",float(array[0])
 	TIME_START = float(array[0])
 	print "Time Start : \n\n", TIME_START # Time at the CAN files need to be clipped.
-	VIDEO_LENGTH = get_video_length('20180816quad.mov')
+	try:
+		VIDEO_LENGTH = get_video_length(glob.glob('*quad.mov')[0])#Searching and returning the name of the quad movie
+	except NameError or UnboundLocalError:
+		print "There seems to be an error due to the mislabeling of folder names or the quad file is not present here. Unable to Proceed."
 	print "Video Length : \n\n", VIDEO_LENGTH , "\n"
 	TIME_STOP = TIME_START + VIDEO_LENGTH
 	g.close()#Closing the reader for video start file
 	#############################################################################################################
 	################ Writing the output file for clipped CAN ####################################################
-	os.chdir("../../")#Creating a new folder for the Clipped CAN and IMU dat
+	os.chdir("../")#Creating a new folder for the Clipped CAN and IMU dat
 	CLIPPEDFOLDERPATH = "ClippedData/"
 	if not os.path.exists(CLIPPEDFOLDERPATH):
 		os.makedirs(CLIPPEDFOLDERPATH)

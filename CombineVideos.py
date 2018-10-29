@@ -14,36 +14,57 @@ from decimal import Decimal
 import glob
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 
-# The line below is a way to change directory into a subfolder if needed.
-#os.chdir("L_Corner") # Remove this statemnt, since the files will be pasted in each folder.
+def concatenatefunction():
+    try:
+        filelist = glob.glob('*.MP4') # Searching for all files with MP4 extension
+        print "List of MP4 files in the folder right now" , filelist, "  ", type(filelist[1])
+    except IndexError:
+        print "Error Encountered. There are either no MP4 files here or you are using this script in the wrong folder!" # Make sure you are in the right folder if this error messsage pops up.
+        # It could also be lack of any MP4 files in the folder
+    if len(filelist) > 1:
+        print "Concatening Files : "
+        filelist.sort()
+        print filelist
+    else:
+        print "Insufficent number of files in folder"
+    #Non - Iterative Clip Formation
+    #clip1 = VideoFileClip(filelist[0]).subclip(0,5)
+    #clip2 = VideoFileClip(filelist[1]).subclip(0,5)
+    #clip3 = VideoFileClip(filelist[2]).subclip(0,5)
+    #cliplist = [clip1,clip2,clip3]
+    #Iterative clip formation
+    cliplist = [ VideoFileClip(name) for name in filelist ]
+    #Concatenation procedure
+    final_clip = concatenate_videoclips([clip for clip in cliplist])
+    final_clip.write_videofile("my_concatenation.mp4")
 
-try:
-    filelist = glob.glob('*.MP4') # Searching for all files with MP4 extension
-    print "List of MP4 files in the folder right now" , filelist, "  ", type(filelist[1])
-except IndexError:
-    print "Error Encountered. There are either no MP4 files here or you are using this script in the wrong folder!" # Make sure you are in the right folder if this error messsage pops up.
-    # It could also be lack of any MP4 files in the folder
-if len(filelist) > 1:
-    print "here we go!"
-    filelist.sort()
-    print filelist
+# We are going to ask for input on which folder to search for clips. We will maintain a list of all folders in the study folder and
+#then make sure the folder is in the list and is not one of the CAN, QUAD, IMU, ClippedData folders
+print "\n Hey Becky and Dylan! This script is meant to concatenate videos.\n", "\n", "This process is slow and tedious since the videos are large" ,\
+" and the video stitching and encoding takes a long time even for a single file. Use this process only when the main quad is failing you."
+study_folder = raw_input("\n Enter the name of the study folder which contains all the data \n")
+print "\n Study folder received : ", study_folder
+if os.path.exists('../'+study_folder+'/'):
+    os.chdir('../'+study_folder+'/')
 else:
-    print "Insufficent number of files in folder"
-#ffmpeg -i "concat:GOPR9354.MP4|GP019354.MP4|GP029354.MP4" -c:a copy -c:v copy output.mp4
-#ffmpeg is cauding weird errors. Output file is smaller than it should be and the above command needs to be run from bash => Not optimal
-
-#Non - Iterative Clip Formation
-#clip1 = VideoFileClip(filelist[0]).subclip(0,5)
-#clip2 = VideoFileClip(filelist[1]).subclip(0,5)
-#clip3 = VideoFileClip(filelist[2]).subclip(0,5)
-#cliplist = [clip1,clip2,clip3]
-
-#Iterative clip formation
-cliplist = [ VideoFileClip(name) for name in filelist ]
-#Concatenation procedure
-final_clip = concatenate_videoclips([clip for clip in cliplist])
-final_clip.write_videofile("my_concatenation.mp4")
-
-# Unfortunately, this piece of code cannot be iterated, so I am hoping that there are no more than 5 MP4 files in individual folders...
-for i in range(len(filelist)):
-    cliplist[i] = VideoFileClip(filelist[i])
+    sys.exit("Folder doesn't exist! Please restart with correct name")
+#Compiling a list of all folders in the study_folder
+folderlist = list(list(os.walk('.'))[0][1])
+print " Here are all the folders in the study_folder : ", folderlist
+#Get name of folder needing video Concatenation
+while True:
+    foldername = raw_input("\nEnter the folder whose videos you would like to concatenate. (Enter 'Done' if you want to exit): \n")
+    print "\nFolder name received : ", foldername, "\n"
+    if (foldername in ['Done']):
+        print "Done concatenating!"
+        break
+    elif (foldername in ['QUAD', 'IMU', 'CAN', 'ClippedData']) or (foldername not in folderlist):
+        print "Enter a different folder name. Can't operate on this folder!"
+        pass
+    else:
+        print "Concatenation function called."
+        os.chdir(foldername + '/')#Entering Folder
+        concatenatefunction()
+        os.chdir('../')#Exiting folder
+        pass
+print "Concatenation Done! Bye!"

@@ -22,6 +22,6 @@ To install MoviePy : http://zulko.github.io/moviepy/install.html
 
 If there are other errors due to missing packages, please contact me.
 
-The codes for analyzing the data are dependent on the folder structure since they naviagate between folder to folder to get the data for cliiping. For this reason, the participant 
+The codes for analyzing the data are dependent on the folder structure since they naviagate between folder to folder to get the data for cliiping. The recommended folder structure is shown below. The repo is cloned into a folder in the same directory level as the study data folder. Make sure to organize all the study data this way.
 
 ![FileStructure](/FolderStructureGD.jpg)

@@ -6,8 +6,8 @@
 # The first file ends with numbers 9354, then 019354 and 029354 and so on. So we combine the files starting with lowest..
 # number in filename and then move to the maximum number in the filenames. For now , a simple sort() function
 
-# Prereqs : This piece of code uses MoviePy library. To be able to use this, you need to install pip (python package manager),
-#and then use pip to install moviepy . The instructions: http://zulko.github.io/moviepy/install.html
+# Prereqs: This piece of code uses MoviePy library. To be able to use this, you need to install pip (python package manager),
+#and then use pip to install moviepy. The instructions: http://zulko.github.io/moviepy/install.html
 import csv,argparse,sys,os
 import subprocess, re
 from decimal import Decimal

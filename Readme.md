@@ -26,4 +26,4 @@ The codes for analyzing the data are dependent on the folder structure since the
 
 ![FileStructure](/FolderStructureGD.jpg)
 
-Please ensure that the folder name does not contain any '-', '/', or other special characters. The only special characters allowed are '_'. Other characters cause issues when entering the name through user input.
+VeryImportantNOTE: Please ensure that the folder name does not contain any '-', '/', or other special characters. The only special characters allowed are '_'. Other characters cause issues when entering the name through user input.

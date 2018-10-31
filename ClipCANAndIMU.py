@@ -7,7 +7,6 @@
 import csv,argparse,sys,os
 import subprocess, re, glob
 from decimal import Decimal
-import CANDataConverter
 
 # This function takes the relative path to the quad video file and then gets the length of the quad video
 def get_video_length(path):

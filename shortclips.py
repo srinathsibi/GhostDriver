@@ -42,7 +42,7 @@ def ReadClipTImings():
             infoline.append(row)
         except ValueError:
             print "Empty cell in Start and Stop Time. Try to clear lines with no data to avoid conflict in processing!"
-    #print "\n", StartTimeList, "\n\n" , StopTimeList , "\n\n", infoline
+    print "\n", StartTimeList, "\n\n" , StopTimeList , "\n\n", infoline
     os.chdir('../')#SWITCHING TO TOP LEVEL STUDY FOLDER
 #Function to convert time in mm:ss to seconds.
 def Converttimetoseconds(timeinminandsec):
@@ -69,9 +69,30 @@ def ClippingQuadVideo():
         ffmpeg_extract_subclip(glob.glob('*quad.mov')[0], StartTimeList[i],StopTimeList[i], targetname=('Clip'+str(i)+'.mov'))
         shutil.move( 'Clip'+str(i)+'.mov' , '../ClippedData/Clip_'+str(i)+'/Clip'+str(i)+'.mp4')
     print '\nClipped Video Files created and moved to the respective folders!!!\n\n'
-    os.chdir('../')
+    os.chdir('../')#Now in the top level folder again
+#Function to clip IMU data into pieces and store into subfolders
 def ClipIMUdata():
     print '\nNow Clipping the IMU Data!!!\n'
+    os.chdir('ClippedData/')#Now in the ClippedData folder
+    imufile = open(glob.glob('*imu.txt')[0] ,'r')
+    imufilereader = csv.reader(imufile)
+    firstrow = next(imufilereader)
+    #print "\n\nFirst timestamp of IMU file is: ", float(firstrow[0]),'\n\n'
+    imustarttime = float(firstrow[0])# Reading start time of the imu file so that we can add to the clip timings for clipping data
+    imufile.seek(0)
+    for i in range(len(StartTimeList)):
+        os.chdir('Clip_' + str(i) + '/')#Inside clip_* folder
+        imuclip = open('IMUClip'+str(i)+'.txt','w')
+        imuclipwriter = csv.writer(imuclip)
+        for row in imufilereader:
+            if float(row[0]) >= ( imustarttime + StartTimeList[i] ) and float(row[0]) <= ( imustarttime + StopTimeList[i] ):
+                #print 'timestamp for printing' , row[0]
+                imuclipwriter.writerows([row])
+        imuclip.close()
+        imufile.seek(0)#Reset the file read position to the start of the imufile for every time we create a new imu clip file.
+        os.chdir('../')#In clipped data folder
+    os.chdir('../')#Moving back to Study Folder
+    print "Current Folder contents:\n\n", os.listdir('.')
 #Starting main function
 if __name__ == '__main__':
     #Open the clip timins information in the ClipTimings

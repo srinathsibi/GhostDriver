@@ -9,10 +9,10 @@
 #3. Clip the IMU data.
 #4. Clip the CAN data streams.
 #5. Store the other information from the same row as aux info in the same sub folder
-import csv,argparse,sys,os
+import csv,argparse,sys,os,shutil
 import subprocess, re, glob
 from decimal import Decimal
-from moviepy.editor import VideoFileClip, concatenate_videoclips
+from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 StartTimeList = []#List of all start times
 StopTimeList = []#List of all stop times
 infoline =[]#List of all information lines. Beware: It is a list of lists
@@ -56,8 +56,20 @@ def CreateFoldersForShortClips():
     os.chdir('ClippedData/')#Moved in to the ClippedDataFolder
     for i in range(len(StartTimeList)):
         subfoldername = 'Clip_'+str(i)
-        os.makedirs(subfoldername)
-        
+        if not os.path.exists(subfoldername):
+            os.makedirs(subfoldername)
+    print "\n\nSubfolders created.\n"#os.listdir('.') is you need to view all the subfolders in the ClippedData Folder
+    os.chdir('../')
+#Function to load and create clips in the subfolders from start and stop times
+def ClippingQuadVideo():
+    print "This function is meant to load and create clips in the subfolders from start and stop times."
+    os.chdir('QUAD/')#In the QUAD folder
+    #Now we need to iterate between each clip_* folder.
+    for i in range(len(StartTimeList)):
+        ffmpeg_extract_subclip(glob.glob('*quad.mov')[0], StartTimeList[i],StopTimeList[i], targetname=('Clip'+str(i)+'.mov'))
+        shutil.move( 'Clip'+str(i)+'.mov' , '../ClippedData/Clip_'+str(i)+'/Clip'+str(i)+'.mp4')
+    print '\nClipped Video Files created and moved to the respective folders!!!\n\n'
+    os.chdir('../')
 #Starting main function
 if __name__ == '__main__':
     #Open the clip timins information in the ClipTimings
@@ -69,3 +81,4 @@ if __name__ == '__main__':
         print "\nThe folder name does not exist, please start again."
     ReadClipTImings()
     CreateFoldersForShortClips()
+    ClippingQuadVideo()

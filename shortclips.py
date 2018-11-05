@@ -92,7 +92,7 @@ def ClipIMUdata():
         imufile.seek(0)#Reset the file read position to the start of the imufile for every time we create a new imu clip file.
         os.chdir('../')#In clipped data folder
     os.chdir('../')#Moving back to Study Folder
-    print "Current Folder contents:\n\n", os.listdir('.')
+    #print "Current Folder contents:\n\n", os.listdir('.')
 #Starting main function
 if __name__ == '__main__':
     #Open the clip timins information in the ClipTimings

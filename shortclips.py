@@ -70,6 +70,8 @@ def ClippingQuadVideo():
         shutil.move( 'Clip'+str(i)+'.mov' , '../ClippedData/Clip_'+str(i)+'/Clip'+str(i)+'.mp4')
     print '\nClipped Video Files created and moved to the respective folders!!!\n\n'
     os.chdir('../')
+def ClipIMUdata():
+    print '\nNow Clipping the IMU Data!!!\n'
 #Starting main function
 if __name__ == '__main__':
     #Open the clip timins information in the ClipTimings
@@ -82,3 +84,4 @@ if __name__ == '__main__':
     ReadClipTImings()
     CreateFoldersForShortClips()
     ClippingQuadVideo()
+    ClipIMUdata()

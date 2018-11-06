@@ -92,7 +92,59 @@ def ClipIMUdata():
         imufile.seek(0)#Reset the file read position to the start of the imufile for every time we create a new imu clip file.
         os.chdir('../')#In clipped data folder
     os.chdir('../')#Moving back to Study Folder
-    #print "Current Folder contents:\n\n", os.listdir('.')
+    #print "Current Folder contents:\n\n", os.listdir('.')#This line is to make sure that we are in the right folder
+def ClipSplitCANData():
+    print "\n\nNow clipping the different streams of CAN data"
+    os.chdir('ClippedData/')
+    try:
+        accelfile = open(glob.glob('*accel_pedal*')[0] ,'r')
+        accelreader = csv.reader(accelfile)
+        brakefile = open(glob.glob('*brake*')[0] ,'r')
+        brakereader = csv.reader(brakefile)
+        speedfile = open(glob.glob('*speed*')[0] ,'r')
+        speedreader = csv.reader(speedfile)
+        steeringfile = open(glob.glob('*steering*')[0] ,'r')
+        steeringreader = csv.reader(steeringfile)
+        print "Files opened!"
+    except:
+        print "Error in opening the separated CAN files!"
+    for i in range(len(StartTimeList)):
+        os.chdir('Clip_' + str(i) + '/')#Inside clip_* folder
+        accelclipout = open('AccelClip'+str(i)+'.txt','w')
+        accelclipwriter = csv.writer(accelclipout)
+        brakeclipout = open('BrakeClip'+str(i)+'.txt','w')
+        brakeclipwriter = csv.writer(brakeclipout)
+        speedclipout = open('SpeedClip'+str(i)+'.txt','w')
+        speedclipwriter = csv.writer(speedclipout)
+        steeringclipout = open('SteeringClip'+str(i)+'.txt','w')
+        steeringclipwriter = csv.writer(steeringclipout)
+        #Writing acceleration file
+        for row in accelreader:
+            if float(row[0])>=StartTimeList[i] and float(row[0])<=StopTimeList[i]:
+                accelclipwriter.writerows([row])
+        accelclipout.close()
+        accelfile.seek(0)# Reset to top of the accelfilereader
+        #Writing braking file
+        for row in brakereader:
+            if float(row[0])>=StartTimeList[i] and float(row[0])<=StopTimeList[i]:
+                brakeclipwriter.writerows([row])
+        brakeclipout.close()
+        brakefile.seek(0)# Reset to the top of the brakefilereader
+        #Writing speed file
+        for row in speedreader:
+            if float(row[0])>=StartTimeList[i] and float(row[0])<=StopTimeList[i]:
+                speedclipwriter.writerows([row])
+        speedclipout.close()
+        speedfile.seek(0)# Reset to the top of the speedfile
+        #Writing the steering file
+        for row in steeringreader:
+            if float(row[0])>=StartTimeList[i] and float(row[0])<=StopTimeList[i]:
+                steeringclipwriter.writerows([row])
+        steeringclipout.close()
+        steeringfile.seek(0)#Reset to the top of the steeringfile
+        os.chdir('../')#Out of the Clip_i folder
+    os.chdir('../')#moving back to the Study Folder
+    print "Current Folder contents:\n\n", os.listdir('.')#This line is to make sure that we are in the right folder
 #Starting main function
 if __name__ == '__main__':
     #Open the clip timins information in the ClipTimings
@@ -106,3 +158,4 @@ if __name__ == '__main__':
     CreateFoldersForShortClips()
     ClippingQuadVideo()
     ClipIMUdata()
+    ClipSplitCANData()

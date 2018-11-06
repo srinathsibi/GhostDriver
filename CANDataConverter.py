@@ -54,11 +54,11 @@ speed_out = open('speed_out.csv','w') # write data to a converted output file
 brake_out = open('brake_out.csv','w') # write data to a converted output file
 accel_out = open('accel_pedal_out.csv','w') # write data to a converted output file
 steering_wheel_out = open('steering_wheel_out.csv','w') # write data to a converted output file
-
-speed_out.write('time,speed\n')
-brake_out.write('time,brake\n')
-accel_out.write('time,accel\n')
-steering_wheel_out.write('time,angle\n')
+#Avoiding the next lines to make sure the clipping process is easier
+#speed_out.write('time,speed\n')
+#brake_out.write('time,brake\n')
+#accel_out.write('time,accel\n')
+#steering_wheel_out.write('time,angle\n')
 
 # Load a data file as read only
 with f:

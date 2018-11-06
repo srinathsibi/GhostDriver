@@ -94,7 +94,7 @@ def ClipIMUdata():
     os.chdir('../')#Moving back to Study Folder
     #print "Current Folder contents:\n\n", os.listdir('.')#This line is to make sure that we are in the right folder
 def ClipSplitCANData():
-    print "\n\nNow clipping the different streams of CAN data"
+    print "\n\nNow clipping the different streams of CAN data\n\n"
     os.chdir('ClippedData/')
     try:
         accelfile = open(glob.glob('*accel_pedal*')[0] ,'r')
@@ -105,7 +105,6 @@ def ClipSplitCANData():
         speedreader = csv.reader(speedfile)
         steeringfile = open(glob.glob('*steering*')[0] ,'r')
         steeringreader = csv.reader(steeringfile)
-        print "Files opened!"
     except:
         print "Error in opening the separated CAN files!"
     for i in range(len(StartTimeList)):

@@ -9,16 +9,17 @@
 #3. Clip the IMU data.
 #4. Clip the CAN data streams.
 #5. Store the other information from the same row as aux info in the same sub folder
+#5.1 The column are hardcoded in. So any change in the order or the number of the columns needs rework
 import csv,argparse,sys,os,shutil
 import subprocess, re, glob
 from decimal import Decimal
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
-StartTimeList = []#List of all start times
-StopTimeList = []#List of all stop times
-infoline =[]#List of all information lines. Beware: It is a list of lists
+StartTimeList = []#List of all start times, Sixth Column
+StopTimeList = []#List of all stop times, Seventh Column
+infoline = []#List of all information lines. Beware: It is a list of lists
 headerrow = []# Header row read once to store in info file for all short clips
 #Starting funciton to read clip ClipTimings
-def ReadClipTImings():
+def ReadClipInfo():
     global StartTimeList
     global StopTimeList
     global infoline
@@ -143,7 +144,20 @@ def ClipSplitCANData():
         steeringfile.seek(0)#Reset to the top of the steeringfile
         os.chdir('../')#Out of the Clip_i folder
     os.chdir('../')#moving back to the Study Folder
-    print "Current Folder contents:\n\n", os.listdir('.')#This line is to make sure that we are in the right folder
+    #print "Current Folder contents:\n\n", os.listdir('.')#This line is to make sure that we are in the right folder
+#Writing the Info line in each clip folder
+def WriteClipInfoLine():
+    print "\n\nWriting Infoline in each clip folder\n\n"
+    os.chdir('ClippedData/')
+    for i in range(len(StartTimeList)):
+        os.chdir('Clip_' + str(i) + '/')#Inside clip_* folder
+        infofile = open('Info'+str(i)+'.txt','w')
+        infowriter = csv.writer(infofile)
+        infowriter.writerow(headerrow)#Header Row for each info file
+        infowriter.writerow(infoline[i])#Info line as entered by Becky and Dylan
+        os.chdir('../')
+    os.chdir('../')#Moving back to the study folder
+    #print "\n\nCurrent Folder contents:\n\n", os.listdir('.')#This line is to make sure that we are in the right folder
 #Starting main function
 if __name__ == '__main__':
     #Open the clip timins information in the ClipTimings
@@ -153,8 +167,9 @@ if __name__ == '__main__':
         os.chdir('../'+foldername+'/')
     except OSError:#use OSError instead
         print "\nThe folder name does not exist, please start again."
-    ReadClipTImings()
+    ReadClipInfo()
     CreateFoldersForShortClips()
     ClippingQuadVideo()
     ClipIMUdata()
     ClipSplitCANData()
+    WriteClipInfoLine()
